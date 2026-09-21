@@ -1,0 +1,597 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Interactive Simulations</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+      html {
+        scroll-behavior: smooth;
+      }
+      ::selection {
+        background: #dbeafe;
+        color: #111827;
+      }
+      select {
+        appearance: none;
+      }
+      select {
+        background-image:
+          linear-gradient(45deg, transparent 50%, #94a3b8 50%),
+          linear-gradient(135deg, #94a3b8 50%, transparent 50%);
+        background-position:
+          calc(100% - 14px) 50%,
+          calc(100% - 9px) 50%;
+        background-size:
+          5px 5px,
+          5px 5px;
+        background-repeat: no-repeat;
+        padding-right: 30px !important;
+      }
+
+      #content section {
+        background: transparent !important;
+      }
+      #content section:hover {
+        transform: none !important;
+      }
+      #content section h2 {
+        letter-spacing: -0.01em;
+      }
+      @media (min-width: 1024px) {
+        #content {
+          column-gap: 4rem;
+        }
+      }
+    </style>
+
+    <style>
+      .chapter {
+        padding-top: 14px !important;
+        padding-bottom: 14px !important;
+      }
+      .chapter-header {
+        margin-bottom: 4px !important;
+        padding-bottom: 0 !important;
+      }
+      .chapter-title {
+        margin-bottom: 3px !important;
+        line-height: 1.15 !important;
+      }
+      .simulation-list,
+      .simulations {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+        gap: 0 !important;
+      }
+      .simulation-item {
+        padding-top: 5px !important;
+        padding-bottom: 5px !important;
+      }
+    </style>
+
+    <style>
+      #content section {
+        padding-top: 16px !important;
+        padding-bottom: 16px !important;
+      }
+      #content section > div:nth-child(2) h2 {
+        margin-bottom: 2px !important;
+      }
+      #content section > div:nth-child(2) {
+        align-self: start !important;
+      }
+      #content section > div:nth-child(2) .flex.flex-col {
+        margin-top: 0 !important;
+      }
+      #content section > div:nth-child(1) {
+        line-height: 0.9 !important;
+      }
+    </style>
+
+    <style>
+      #content section > .font-\[\'Newsreader\',serif] {
+        align-self: start !important;
+        line-height: 0.9 !important;
+        height: auto !important;
+        min-height: 0 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+      #content section > .font-\[\'Newsreader\',
+      serif\] span {
+        display: block !important;
+        margin-top: 3px !important;
+        line-height: 1 !important;
+      }
+    </style>
+
+    <style>
+      #content section > .flex.flex-col {
+        align-self: start !important;
+        gap: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+    </style>
+  </head>
+  <body
+    class="min-h-screen bg-[#f6f7fb] text-[#111827] font-['IBM_Plex_Sans',sans-serif] antialiased"
+  >
+    <div class="mx-auto w-full max-w-[1500px] px-5 pt-6 pb-14 sm:px-8 lg:px-10">
+      <!-- HEADER -->
+      <header
+        class="sticky top-4 z-20 mb-7 overflow-hidden rounded-[22px] border border-[#202633] bg-[#111827] px-6 pb-7 pt-5 text-white shadow-[0_18px_45px_rgba(15,23,42,0.14)] sm:px-8 lg:px-10"
+      >
+        <div
+          class="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-[#2563eb] via-[#d946ef] to-[#f59e0b]"
+        ></div>
+
+        <div
+          class="mb-5 flex flex-col gap-3 font-['IBM_Plex_Mono',monospace] text-[10px] uppercase tracking-[0.14em] text-[#9ca3af] sm:flex-row sm:items-center sm:justify-between"
+        >
+          <span>Skila Mardotilah | PT Yudhistira Ghalia Indonesia</span>
+          <span
+            id="total-count-label"
+            class="w-fit rounded-full border border-[#fbbf24]/40 bg-[#fbbf24] px-3 py-1.5 font-semibold tracking-normal text-[#111827]"
+          ></span>
+        </div>
+
+        <div
+          class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between"
+        >
+          <div>
+            <h1
+              class="mb-3 max-w-[18ch] font-['Newsreader',serif] text-4xl font-semibold leading-[0.95] tracking-tight text-white sm:text-5xl lg:text-6xl"
+            >
+              Mathematics Simulations
+            </h1>
+            <p
+              class="max-w-[66ch] text-sm leading-7 text-[#cbd5e1] sm:text-[15px]"
+            >
+              A collection of learning simulations, organized by grade and
+              chapter.
+            </p>
+          </div>
+
+          <nav
+            id="tabs"
+            class="flex flex-wrap gap-2 lg:shrink-0 lg:flex-nowrap"
+          ></nav>
+        </div>
+      </header>
+
+      <!-- KONTEN BAB -->
+      <main
+        id="content"
+        class="grid grid-cols-1 gap-x-10 lg:grid-cols-2 lg:items-start"
+      ></main>
+
+      <footer
+        class="mt-12 border-t border-[#d9dee8] pt-5 text-center font-['IBM_Plex_Mono',monospace] text-[10px] uppercase tracking-[0.14em] text-[#7b8494]"
+      >
+        ✦ Updated manually — learn, explore, and discover patterns ✦
+      </footer>
+    </div>
+
+    <script>
+      const DATA = {
+        2: {
+          label: "Grade 2",
+          subject: "Mathematics",
+          bab: [
+            {
+              no: 1,
+              judul: "Bilangan Cacah sampai 50",
+              items: [
+                {
+                  judul: "Dunia Bilangan Cacah",
+                  file: "k2-b1-4-dunia_bilangan_cacah.html",
+                },
+                {
+                  judul: "Latihan Nilai Tempat",
+                  file: "k2-b1-10-latihan_nilai_tempat.html",
+                },
+                {
+                  judul: "Membandingkan dan Mengurutkan Bilangan",
+                  file: "k2-b1-18-membandingkan-dan-mengurutkan_bilangan.html",
+                },
+              ],
+            },
+            {
+              no: 2,
+              judul: "Penjumlahan dan Pengurangan Sampai 20",
+              items: [
+                {
+                  judul: "Kebun Penjumlahan",
+                  file: "k2-b2-30-kebun-penjumlahan.html",
+                },
+                {
+                  judul: "Kebun Pengurangan",
+                  file: "k2-b2-37-kebun-pengurangan.html",
+                },
+                {
+                  judul: "Kebun Cerita",
+                  file: "k2-b2-43-kebun-cerita.html",
+                },
+              ],
+            },
+            {
+              no: 3,
+              judul: "Pecahan Sederhana",
+              items: [
+                {
+                  judul: "Setengah: Bagi Kue",
+                  file: "k2-b3-60-setengah-bagi-kue.html",
+                },
+                {
+                  judul: "Seperempat: Bagi Mainan",
+                  file: "k2-b3-66-seperempat-bagi-mainan.html",
+                },
+              ],
+            },
+            {
+              no: 4,
+              judul: "Pola Gambar dan Pola Bunyi",
+              items: [
+                {
+                  judul: "Pola Gambar Kue",
+                  file: "k2-b4-81atas-pola-gambar-kue.html",
+                },
+                { judul: "Pola Warna", file: "k2-b4-81bawah-pola-warna.html" },
+                { judul: "Pola Bunyi", file: "k2-b4-82-pola-bunyi.html" },
+              ],
+            },
+            {
+              no: 5,
+              judul: "Bangun Datar dan Bangun Ruang",
+              items: [
+                {
+                  judul: "Mengelompokkan Bangun Datar dan Bangun Ruang",
+                  file: "k2-b5-103-mengelompokkan-bangun-datar-dan-bangun-ruang.html",
+                },
+                {
+                  judul: "Mengurai Bentuk",
+                  file: "k2-b5-107-mengurai-bentuk.html",
+                },
+                {
+                  judul: "Petualangan di Labirin Perpustakaan",
+                  file: "k2-b5-113-petualangan-di-labirin-perpustakaan.html",
+                },
+              ],
+            },
+            {
+              no: 6,
+              judul: "Posisi Benda",
+              items: [
+                {
+                  judul: "Kanan dan Kiri: Susun Benda",
+                  file: "k2-b6-129-kanan-kiri-susun-benda.html",
+                },
+                {
+                  judul: "Depan, Belakang, Atas, dan Bawah",
+                  file: "k2-b6-130-depan-belakang-atas-bawah.html",
+                },
+              ],
+            },
+            {
+              no: 7,
+              judul: "Pengukuran",
+              items: [
+                {
+                  judul: "Petualangan Andi",
+                  file: "k2-b7-150-petualangan-andi.html",
+                },
+                {
+                  judul: "Pagi, Siang, Sore, dan Malam",
+                  file: "k2-b7-161-ITS-pagi-siang-sore-malam.html",
+                },
+              ],
+            },
+            {
+              no: 8,
+              judul: "Bilangan Cacah sampai 100",
+              items: [
+                {
+                  judul: "Latihan Nilai Tempat sampai 100",
+                  file: "k2-b8-190-latihan_nilai_tempat_sampai100.html",
+                },
+                {
+                  judul: "Dunia Bilangan Cacah sampai 100",
+                  file: "k2-b8-186-dunia-bilangan-cacah-sampai-100.html",
+                },
+              ],
+            },
+            {
+              no: 9,
+              judul: "Penyajian Data",
+              items: [
+                {
+                  judul: "Diagram Turus Tiga Kebun",
+                  file: "k2-b9-213-diagram-turus-tiga-kebun.html",
+                },
+                {
+                  judul: "Diagram Gambar di Kebun",
+                  file: "k2-b9-217-diagram-gambar-di-kebun.html",
+                },
+              ],
+            },
+          ],
+        },
+        3: { label: "Grade 3", subject: "Mathematics", comingSoon: true },
+        4: { label: "Grade 4", subject: "Mathematics", comingSoon: true },
+        5: { label: "Grade 5", subject: "Mathematics", comingSoon: true },
+        6: { label: "Grade 6", subject: "Mathematics", comingSoon: true },
+        8: { label: "Grade 8", subject: "Mathematics", comingSoon: true },
+        9: { label: "Grade 9", subject: "Mathematics", comingSoon: true },
+        10: {
+          label: "Grade 10",
+          subject: "Mathematics",
+          bab: [
+            {
+              no: 1,
+              judul: "Fungsi Eksponensial & Bentuk Akar",
+              items: [
+                {
+                  hal: 15,
+                  judul: "Eksplorasi Grafik Eksponensial",
+                  file: "bab1-hal15-eksplorasi-grafik-eksponensial.html",
+                },
+                {
+                  hal: 26,
+                  judul: "Latihan Bentuk Akar (3 Level)",
+                  file: "bab1-hal26-latihan-bentuk-akar-3level.html",
+                },
+                {
+                  hal: 31,
+                  judul: "Latihan Logaritma (6 Topik)",
+                  file: "bab1-hal31-latihan-logaritma-6topik.html",
+                },
+              ],
+            },
+            {
+              no: 2,
+              judul: "Sistem Persamaan & Pertidaksamaan Linear",
+              items: [
+                {
+                  hal: 50,
+                  judul: "Eksplorasi Grafik SPLTV 3D",
+                  file: "bab2-hal50-eksplorasi-grafik-spltv-3d.html",
+                },
+                {
+                  hal: 64,
+                  judul: "Eksplorasi Grafik SPtLDV",
+                  file: "bab2-hal64-eksplorasi-grafik-sptldv.html",
+                },
+                {
+                  hal: 66,
+                  judul: "Latihan Penerapan SPtLDV",
+                  file: "bab2-hal66-latihan-penerapan-sptldv.html",
+                },
+              ],
+            },
+            {
+              no: 3,
+              judul: "Fungsi Kuadrat",
+              items: [
+                {
+                  hal: 103,
+                  judul: "Eksplorasi Sifat-Sifat Grafik Fungsi Kuadrat",
+                  file: "bab3-hal103-eksplorasi-sifat-sifat-grafik-fungsi-kuadrat.html",
+                },
+                {
+                  hal: 107,
+                  judul: "Latihan Membuat Grafik Fungsi Kuadrat Bertahap",
+                  file: "bab3-hal107-latihan-membuat-grafik-fungsi-kuadrat-bertahap.html",
+                },
+                {
+                  hal: 112,
+                  judul:
+                    "Latihan Menentukan Fungsi Kuadrat Bervariasi & Bertahap",
+                  file: "bab3-hal112-latihan-menentukan-fungsi-kuadrat-bervariasi-dan-bertahap.html",
+                },
+              ],
+            },
+            {
+              no: 4,
+              judul: "Trigonometri",
+              items: [
+                {
+                  hal: 135,
+                  judul: "Eksplorasi Perahu & Trigonometri",
+                  file: "bab4-hal135-eksplorasi-perahu-trigonometri.html",
+                },
+                {
+                  hal: 141,
+                  judul: "Eksplorasi Konsep Dasar Trigonometri",
+                  file: "bab4-hal141-eksplorasi-konsep-dasar-trigonometri.html",
+                },
+                {
+                  hal: 147,
+                  judul: "Eksplorasi Penerapan Trigonometri",
+                  file: "bab4-hal147-latihan-penerapan-trigonometri.html",
+                },
+              ],
+            },
+            {
+              no: 5,
+              judul: "Statistika",
+              items: [
+                {
+                  hal: 164,
+                  judul: "Eksplorasi Ukuran Penyebaran Data",
+                  file: "bab5-hal164-eksplorasi-ukuran-penyebaran-data.html",
+                },
+                {
+                  hal: 175,
+                  judul: "Eksplorasi Dotplot, Histogram & Boxplot",
+                  file: "bab5-hal175-eksplorasi-dotplot-histogram-boxplot.html",
+                },
+                {
+                  hal: 180,
+                  judul: "Eksplorasi Diagram Pencar",
+                  file: "bab5-hal180-eksplorasi-diagram-pencar.html",
+                },
+              ],
+            },
+          ],
+        },
+        11: { label: "Grade 11", subject: "Mathematics", comingSoon: true },
+        12: { label: "Grade 12", subject: "Mathematics", comingSoon: true },
+      };
+
+      const tabsEl = document.getElementById("tabs");
+      const contentEl = document.getElementById("content");
+      const totalCountLabel = document.getElementById("total-count-label");
+      let active = "2";
+      let hasSelectedGrade = false;
+
+      const LEVELS = [
+        { key: "sd", label: "Elementary School", grades: [2, 3, 4, 5, 6] },
+        { key: "smp", label: "Middle School", grades: [8, 9] },
+        { key: "sma", label: "High School", grades: [10, 11, 12] },
+      ];
+
+      // Hitung total keseluruhan simulasi dari seluruh grade yang ada
+      function calculateTotalSimulations() {
+        let total = 0;
+        Object.values(DATA).forEach((gradeData) => {
+          if (gradeData.bab) {
+            gradeData.bab.forEach((b) => {
+              total += b.items.length;
+            });
+          }
+        });
+        return total;
+      }
+
+      const SELECT_CLASS =
+        "font-['IBM_Plex_Mono',monospace] text-xs font-semibold px-3 py-2 rounded-lg border cursor-pointer transition duration-150 text-[#e5e7eb] bg-[#1f2937] border-[#475569] hover:text-white hover:border-[#60a5fa] focus:outline-none focus:border-[#60a5fa]";
+
+      function render() {
+        tabsEl.innerHTML = "";
+        totalCountLabel.textContent =
+          calculateTotalSimulations() + " simulations";
+
+        LEVELS.forEach((level) => {
+          const select = document.createElement("select");
+          select.className = SELECT_CLASS;
+
+          const placeholder = document.createElement("option");
+          placeholder.textContent = level.label;
+          placeholder.value = "";
+          placeholder.disabled = true;
+          select.appendChild(placeholder);
+
+          level.grades.forEach((g) => {
+            const k = DATA[g];
+            if (!k) return;
+            const opt = document.createElement("option");
+            opt.value = String(g);
+
+            // Menampilkan jumlah simulasi di dalam teks dropdown masing-masing kelas
+            let countText = "";
+            if (k.bab) {
+              let gradeCount = k.bab.reduce(
+                (sum, b) => sum + b.items.length,
+                0,
+              );
+              countText = ` (${gradeCount})`;
+            }
+
+            opt.textContent =
+              k.label + countText + (k.comingSoon ? " · (Coming Soon)" : "");
+            opt.disabled = !!k.comingSoon;
+
+            if (hasSelectedGrade && String(g) === String(active)) {
+              opt.selected = true;
+            }
+
+            select.appendChild(opt);
+          });
+
+          if (
+            !hasSelectedGrade ||
+            !level.grades.map(String).includes(String(active))
+          ) {
+            placeholder.selected = true;
+          }
+
+          select.onchange = () => {
+            active = select.value;
+            hasSelectedGrade = true;
+            render();
+          };
+
+          tabsEl.appendChild(select);
+        });
+
+        const gradeData = DATA[active];
+
+        contentEl.innerHTML = "";
+        if (gradeData.comingSoon || !gradeData.bab) {
+          contentEl.innerHTML =
+            '<p class="py-8 text-sm text-[#686a70]">No simulations available for this grade yet.</p>';
+          return;
+        }
+
+        gradeData.bab.forEach((b) => {
+          const section = document.createElement("section");
+          section.className =
+            "relative mb-5 grid grid-cols-1 gap-y-1 overflow-hidden rounded-2xl border border-[#e1e5ec] bg-white py-4 pl-5 pr-5 shadow-[0_8px_24px_rgba(15,23,42,0.05)] transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_14px_32px_rgba(15,23,42,0.08)] sm:grid-cols-[58px_1fr] sm:gap-x-4 sm:pl-5";
+
+          const accent = document.createElement("div");
+          accent.className =
+            "absolute left-0 top-4 h-9 w-1 rounded-r-full bg-gradient-to-b from-[#2563eb] to-[#d946ef]";
+          section.appendChild(accent);
+
+          const marker = document.createElement("div");
+          marker.className =
+            "flex flex-col items-start font-['Newsreader',serif] text-[#2563eb]";
+          marker.innerHTML =
+            "<span class=\"font-['IBM_Plex_Mono',monospace] text-[7px] font-semibold leading-none tracking-[0.18em] text-[#9ca3af]\">CHAPTER</span>" +
+            '<span class="mt-1 text-2xl font-semibold leading-none sm:text-3xl">' +
+            String(b.no).padStart(2, "0") +
+            "</span>";
+          section.appendChild(marker);
+
+          const content = document.createElement("div");
+          content.className = "min-w-0 sm:col-start-2 sm:row-start-1";
+
+          const title = document.createElement("h2");
+          title.className =
+            "mb-0.5 text-[15px] font-semibold leading-tight text-[#111827]";
+          title.textContent = b.judul;
+          content.appendChild(title);
+
+          const grid = document.createElement("div");
+          grid.className = "flex flex-col";
+          b.items.forEach((it) => {
+            const a = document.createElement("a");
+            a.className =
+              "group flex items-center justify-between gap-4 border-b border-[#eef1f5] py-1.5 text-[13px] text-[#475569] transition duration-150 last:border-b-0 hover:text-[#7c3aed]";
+            a.href = `./${active}/${it.file}`;
+            a.innerHTML = `
+              <span class="leading-snug">${it.judul}</span>
+              <span class="font-semibold text-[#2563eb] transition duration-150 group-hover:translate-x-1 group-hover:text-[#d946ef]">→</span>
+            `;
+            grid.appendChild(a);
+          });
+          content.appendChild(grid);
+          section.appendChild(content);
+
+          contentEl.appendChild(section);
+        });
+      }
+
+      render();
+    </script>
+  </body>
+</html>

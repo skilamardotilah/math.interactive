@@ -1,0 +1,922 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simulasi Trigonometri Interaktif & Dinamis</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ink: "#080808",
+            paper: "#E4E0D4",
+            cream: "#F7F3E5",
+            yellow: "#FFF36A",
+            maroon: "#720019",
+            redbook: "#A52A2A",
+            purple: "#3B175A",
+            teal: "#08766E",
+            blueink: "#1F4FA3",
+            blueSoft: "#DDE8F7",
+            green: "#1B7F63"
+          },
+          boxShadow: {
+            "ink": "5px 5px 0 #080808",
+            "ink-sm": "3px 3px 0 #080808",
+            "yellow": "5px 5px 0 #FFF36A",
+            "maroon": "5px 5px 0 #720019"
+          }
+        }
+      }
+    };
+  </script>
+</head>
+
+<!-- ===== WEB BACKGROUND: sengaja berbeda dari area simulasi ===== -->
+  <body class="min-h-screen bg-[#D9D7E8] px-3 py-6 text-ink sm:px-6 lg:px-8 flex items-center justify-center font-sans">
+
+  <main class="w-full max-w-5xl overflow-hidden rounded-2xl border-2 border-ink bg-cream shadow-[4px_4px_0_rgba(15,23,42,0.12)]">
+
+    <!-- HEADER — dibuat sama family-nya dengan simulasi perahu -->
+    <header class="relative flex items-center gap-4 overflow-hidden border-b-[5px] border-blueink bg-ink px-5 py-4 sm:px-7">
+      <div class="absolute -right-8 -top-10 h-28 w-28 rounded-full bg-yellow/10"></div>
+      <div class="absolute -bottom-12 right-24 h-24 w-24 rounded-full bg-teal/20"></div>
+
+      <img
+        src="data:image/png;base64,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"
+        alt="Logo Yudhistira"
+        class="relative z-10 h-14 w-14 shrink-0 object-contain drop-shadow-[0_3px_8px_rgba(0,0,0,.45)] sm:h-[68px] sm:w-[68px]"
+      />
+
+      <div class="relative z-10 min-w-0">
+        <h1 class="text-xl font-black leading-tight tracking-tight text-white sm:text-2xl">
+          Simulasi Trigonometri Interaktif &amp; Dinamis
+        </h1>
+        <p class="mt-1 text-xs font-medium text-[#E4E0D4] sm:text-sm">
+          Penerapan Trigonometri pada Masalah Kontekstual
+        </p>
+      </div>
+    </header>
+
+    <!-- ===== SIMULATOR SURFACE: area simulasi, sengaja berbeda dari WEB BACKGROUND ===== -->
+    <!-- BODY -->
+    <section class="bg-[#F4EFD9] p-4 sm:p-6 lg:p-7">
+      <div class="mb-5">
+        <div class="mb-2 flex items-center gap-2">
+          <span class="text-sm font-black uppercase tracking-wider text-ink">Pilih Soal</span>
+          
+        </div>
+        <div class="nav-buttons flex flex-wrap gap-2" id="navButtons"></div>
+      </div>
+
+      <div class="grid grid-cols-1 gap-5 lg:grid-cols-[0.82fr_1.18fr]">
+
+        <!-- LEFT -->
+        <section class="left-panel flex flex-col gap-4">
+
+          <div class="problem-card rounded-xl border border-slate-200 bg-white p-4 shadow-sm" id="problemDesc"></div>
+
+          <div class="control-panel flex flex-col gap-3" id="controlPanel"></div>
+
+        </section>
+
+        <!-- RIGHT -->
+        <section class="right-panel flex flex-col gap-4">
+
+          <div class="rounded-xl border border-slate-200 bg-white p-3 shadow-sm sm:p-4">
+            <div class="mb-3 flex items-center justify-between gap-3">
+              <div>
+                <p class="text-[10px] font-black uppercase tracking-[0.16em] text-teal">
+                  Visualisasi
+                </p>
+                <h2 class="text-base font-black sm:text-lg">Model Situasi</h2>
+              </div>
+
+            </div>
+
+            <div class="overflow-hidden rounded-lg border-2 border-ink bg-blueSoft">
+              <canvas
+                id="simCanvas"
+                width="550"
+                height="350"
+                class="block h-auto w-full max-w-none"
+              ></canvas>
+            </div>
+          </div>
+
+          <button
+            id="showBtn"
+            onclick="toggleResult()"
+            class="w-full rounded-xl bg-maroon px-4 py-3 text-sm font-black text-white shadow-sm transition-all hover:-translate-y-0.5 hover:bg-[#8D0623] active:translate-y-0"
+          >
+            Tampilkan Jawaban &amp; Langkah
+          </button>
+
+          <div
+            id="resultBox"
+            class="hidden rounded-xl bg-maroon p-4 text-white shadow-sm"
+          ></div>
+
+        </section>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="flex flex-col gap-2 border-t border-slate-700 bg-ink px-5 py-3 text-center text-[10px] font-bold tracking-wide text-slate-300 sm:flex-row sm:items-center sm:justify-between sm:px-7 sm:text-left">
+      <span>© 2026 Laboratorium Virtual Matematika</span>
+      <span class="text-slate-300">PT Yudhistira Ghalia Indonesia</span>
+    </footer>
+
+  </main>
+
+  <script>
+
+      let currentIdx = 0;
+
+      /* ===== Visual scene helpers — polished illustrated style ===== */
+      function roundedRect(ctx, x, y, w, h, r) {
+        const rr = Math.min(r, w / 2, h / 2);
+        ctx.beginPath();
+        ctx.moveTo(x + rr, y);
+        ctx.arcTo(x + w, y, x + w, y + h, rr);
+        ctx.arcTo(x + w, y + h, x, y + h, rr);
+        ctx.arcTo(x, y + h, x, y, rr);
+        ctx.arcTo(x, y, x + w, y, rr);
+        ctx.closePath();
+      }
+
+      function drawPerson(ctx, x, y, scale = 1, pose = "standing") {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.scale(scale, scale);
+
+        // soft shadow
+        ctx.fillStyle = "rgba(15,23,42,.14)";
+        ctx.beginPath();
+        ctx.ellipse(0, 2, 18, 5, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // legs
+        ctx.strokeStyle = "#080808";
+        ctx.lineWidth = 5;
+        ctx.lineCap = "round";
+        ctx.beginPath();
+        ctx.moveTo(-4, -27); ctx.lineTo(-7, -5);
+        ctx.moveTo(4, -27); ctx.lineTo(8, -5);
+        ctx.stroke();
+
+        // shoes
+        ctx.strokeStyle = "#080808";
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.moveTo(-8, -5); ctx.lineTo(-14, -4);
+        ctx.moveTo(8, -5); ctx.lineTo(14, -4);
+        ctx.stroke();
+
+        // body / shirt
+        ctx.fillStyle = "#1F4FA3";
+        roundedRect(ctx, -11, -53, 22, 27, 6);
+        ctx.fill();
+
+        // shirt highlight
+        ctx.fillStyle = "rgba(255,255,255,.22)";
+        roundedRect(ctx, -7, -49, 5, 18, 2);
+        ctx.fill();
+
+        // arms
+        ctx.strokeStyle = "#f2b58d";
+        ctx.lineWidth = 5;
+        ctx.beginPath();
+        if (pose === "look") {
+          ctx.moveTo(-9, -48); ctx.lineTo(-18, -38);
+          ctx.moveTo(9, -48); ctx.lineTo(18, -43);
+        } else {
+          ctx.moveTo(-9, -48); ctx.lineTo(-16, -34);
+          ctx.moveTo(9, -48); ctx.lineTo(16, -34);
+        }
+        ctx.stroke();
+
+        // neck
+        ctx.fillStyle = "#f2b58d";
+        ctx.fillRect(-4, -58, 8, 8);
+
+        // head
+        ctx.beginPath();
+        ctx.arc(0, -68, 11, 0, Math.PI * 2);
+        ctx.fill();
+
+        // hair
+        ctx.fillStyle = "#720019";
+        ctx.beginPath();
+        ctx.arc(0, -71, 11, Math.PI, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(-7, -69, 5, 3.5, 5.6);
+        ctx.fill();
+
+        // face detail
+        ctx.fillStyle = "#080808";
+        ctx.beginPath();
+        ctx.arc(4, -68, 1.2, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.restore();
+      }
+
+      function drawTree(ctx, x, y, h) {
+        ctx.save();
+        const trunkH = Math.max(45, h * 5.2);
+        const topY = y - trunkH;
+
+        // ground shadow
+        ctx.fillStyle = "rgba(15,23,42,.13)";
+        ctx.beginPath();
+        ctx.ellipse(x, y + 2, 34, 7, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // trunk with taper
+        ctx.fillStyle = "#7A4B32";
+        ctx.beginPath();
+        ctx.moveTo(x - 10, y);
+        ctx.lineTo(x - 7, topY + 22);
+        ctx.lineTo(x + 7, topY + 22);
+        ctx.lineTo(x + 11, y);
+        ctx.closePath();
+        ctx.fill();
+        ctx.fillStyle = "#A86A45";
+        ctx.beginPath();
+        ctx.moveTo(x - 2, y);
+        ctx.lineTo(x, topY + 24);
+        ctx.lineTo(x + 7, topY + 23);
+        ctx.lineTo(x + 6, y);
+        ctx.closePath();
+        ctx.fill();
+
+        // branches
+        ctx.strokeStyle = "#74452f";
+        ctx.lineWidth = 5;
+        ctx.lineCap = "round";
+        ctx.beginPath();
+        ctx.moveTo(x, topY + 30); ctx.lineTo(x - 18, topY + 10);
+        ctx.moveTo(x + 2, topY + 28); ctx.lineTo(x + 18, topY + 8);
+        ctx.stroke();
+
+        // foliage clusters
+        const blobs = [
+          [x, topY + 2, 34, "#2f8f46"],
+          [x - 25, topY + 18, 25, "#3fa653"],
+          [x + 25, topY + 18, 26, "#348f45"],
+          [x - 10, topY - 20, 25, "#4caf50"],
+          [x + 12, topY - 17, 26, "#3d9d4b"],
+          [x, topY - 34, 19, "#58b957"],
+        ];
+        blobs.forEach(([bx, by, r, c]) => {
+          ctx.fillStyle = c;
+          ctx.beginPath();
+          ctx.arc(bx, by, r, 0, Math.PI * 2);
+          ctx.fill();
+        });
+
+        // leaf highlights
+        ctx.fillStyle = "rgba(255,255,255,.18)";
+        [[x-16,topY-18],[x+12,topY-29],[x+27,topY+10]].forEach(([bx,by]) => {
+          ctx.beginPath(); ctx.arc(bx, by, 5, 0, Math.PI*2); ctx.fill();
+        });
+        ctx.restore();
+      }
+
+      function drawFlag(ctx, x, y) {
+        // pole cap
+        ctx.fillStyle = "#f6c945";
+        ctx.beginPath(); ctx.arc(x, y + 3, 4, 0, Math.PI * 2); ctx.fill();
+
+        // flag pole
+        ctx.strokeStyle = "#64748b";
+        ctx.lineWidth = 3;
+        ctx.beginPath(); ctx.moveTo(x, y + 4); ctx.lineTo(x, y + 68); ctx.stroke();
+
+        // red-white flag
+        ctx.fillStyle = "#ef4444";
+        ctx.beginPath();
+        ctx.moveTo(x + 2, y + 6); ctx.lineTo(x + 38, y + 6);
+        ctx.lineTo(x + 32, y + 18); ctx.lineTo(x + 2, y + 18);
+        ctx.closePath(); ctx.fill();
+
+        ctx.fillStyle = "#fff";
+        ctx.beginPath();
+        ctx.moveTo(x + 2, y + 18); ctx.lineTo(x + 32, y + 18);
+        ctx.lineTo(x + 38, y + 30); ctx.lineTo(x + 2, y + 30);
+        ctx.closePath(); ctx.fill();
+
+        ctx.strokeStyle = "rgba(15,23,42,.15)";
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+
+      function drawBoat(ctx, x, y) {
+        ctx.save();
+        ctx.translate(x, y);
+        // water
+        ctx.strokeStyle = "#38bdf8";
+        ctx.lineWidth = 2;
+        for (let i = 0; i < 3; i++) {
+          ctx.beginPath();
+          ctx.moveTo(-8 - i * 5, 25 + i * 5);
+          ctx.quadraticCurveTo(14, 20 + i * 5, 36 + i * 5, 25 + i * 5);
+          ctx.stroke();
+        }
+        // hull
+        ctx.fillStyle = "#ef4444";
+        ctx.beginPath();
+        ctx.moveTo(0, 10); ctx.lineTo(54, 10);
+        ctx.lineTo(45, 28); ctx.lineTo(10, 28);
+        ctx.quadraticCurveTo(4, 22, 0, 10);
+        ctx.closePath(); ctx.fill();
+        // cabin
+        ctx.fillStyle = "#F7F3E5";
+        roundedRect(ctx, 14, -3, 24, 14, 3);
+        ctx.fill();
+        ctx.fillStyle = "#38bdf8";
+        roundedRect(ctx, 18, 0, 7, 7, 2); ctx.fill();
+        roundedRect(ctx, 28, 0, 7, 7, 2); ctx.fill();
+        // tiny flag
+        ctx.strokeStyle = "#475569"; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(42, -3); ctx.lineTo(42, -15); ctx.stroke();
+        ctx.fillStyle = "#facc15";
+        ctx.beginPath(); ctx.moveTo(42,-15); ctx.lineTo(53,-11); ctx.lineTo(42,-7); ctx.closePath(); ctx.fill();
+        ctx.restore();
+      }
+
+      function drawLadder(ctx, x1, y1, x2, y2) {
+        ctx.save();
+        ctx.strokeStyle = "#b7791f";
+        ctx.lineWidth = 6;
+        ctx.lineCap = "round";
+        ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+
+        const dx = x2 - x1, dy = y2 - y1;
+        const len = Math.hypot(dx, dy);
+        const nx = -dy / len, ny = dx / len;
+        const offset = 8;
+        ctx.beginPath();
+        ctx.moveTo(x1 + nx*offset, y1 + ny*offset);
+        ctx.lineTo(x2 + nx*offset, y2 + ny*offset);
+        ctx.moveTo(x1 - nx*offset, y1 - ny*offset);
+        ctx.lineTo(x2 - nx*offset, y2 - ny*offset);
+        ctx.stroke();
+
+        ctx.lineWidth = 3;
+        const rungs = Math.max(4, Math.floor(len / 24));
+        for (let i = 1; i < rungs; i++) {
+          const t = i / rungs;
+          const cx = x1 + dx*t, cy = y1 + dy*t;
+          ctx.beginPath();
+          ctx.moveTo(cx - nx*offset, cy - ny*offset);
+          ctx.lineTo(cx + nx*offset, cy + ny*offset);
+          ctx.stroke();
+        }
+        ctx.restore();
+      }
+
+      function drawCliff(ctx, x, y, w, h) {
+        ctx.save();
+        // top grass
+        ctx.fillStyle = "#6aa84f";
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + w, y);
+        ctx.lineTo(x + w - 8, y + 10);
+        ctx.lineTo(x + 15, y + 10);
+        ctx.closePath(); ctx.fill();
+
+        // rock body
+        const grad = ctx.createLinearGradient(x, y, x+w, y);
+        grad.addColorStop(0, "#64748b");
+        grad.addColorStop(.5, "#7c8796");
+        grad.addColorStop(1, "#475569");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.moveTo(x + 10, y + 7);
+        ctx.lineTo(x + w, y + 7);
+        ctx.lineTo(x + w, y + h);
+        ctx.lineTo(x + 25, y + h);
+        ctx.lineTo(x + 18, y + h - 28);
+        ctx.lineTo(x + 5, y + h - 42);
+        ctx.closePath(); ctx.fill();
+
+        // rock facets
+        ctx.fillStyle = "rgba(255,255,255,.12)";
+        ctx.beginPath();
+        ctx.moveTo(x+25,y+20); ctx.lineTo(x+65,y+10); ctx.lineTo(x+52,y+h-20); ctx.lineTo(x+32,y+h-35); ctx.closePath(); ctx.fill();
+        ctx.fillStyle = "rgba(15,23,42,.14)";
+        ctx.beginPath();
+        ctx.moveTo(x+w-40,y+15); ctx.lineTo(x+w-8,y+10); ctx.lineTo(x+w-8,y+h); ctx.lineTo(x+w-48,y+h-20); ctx.closePath(); ctx.fill();
+
+        ctx.restore();
+      }
+
+
+      const problems = [
+        {
+          id: 1,
+          title: "Soal 1: Tinggi Tiang Bendera",
+          getDesc: (p) =>
+            `Seorang siswa berdiri sejauh <strong>${p.jarak}</strong> meter dari sebuah tiang bendera. Sudut elevasi dari mata siswa ke puncak tiang adalah <strong>${p.sudut}°</strong>. Tinggi mata siswa <strong>${p.tinggiMata}</strong> meter.<br><br><strong>Berapakah tinggi tiang bendera?</strong>`,
+          params: { jarak: 8, sudut: 45, tinggiMata: 1.6 },
+          labels: {
+            jarak: "Jarak (m)",
+            sudut: "Sudut Elevasi (°)",
+            tinggiMata: "Tinggi Mata (m)",
+          },
+          calc: (p) => {
+            let h =
+              p.tinggiMata + p.jarak * Math.tan((p.sudut * Math.PI) / 180);
+            return {
+              ans: h.toFixed(2) + " meter",
+              steps: `Tinggi Tiang = Tinggi Mata + (Jarak × tan(Sudut))<br>Tinggi Tiang = ${p.tinggiMata} + (${p.jarak} × tan(${p.sudut}°)) = <strong>${h.toFixed(2)} meter</strong>`,
+            };
+          },
+          draw: (ctx, p) => {
+            ctx.beginPath();
+            ctx.moveTo(30, 320);
+            ctx.lineTo(520, 320);
+            ctx.strokeStyle = "#08766E";
+            ctx.lineWidth = 4;
+            ctx.stroke();
+            ctx.strokeStyle = "rgba(22,101,52,.20)";
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(30, 325);
+            ctx.lineTo(520, 325);
+            ctx.stroke();
+            let poleX = 120 + p.jarak * 28;
+            let hTiangVisual =
+              p.tinggiMata + p.jarak * Math.tan((p.sudut * Math.PI) / 180);
+            let poleY = 320 - hTiangVisual * 10;
+
+            ctx.fillStyle = "#7f8c8d";
+            ctx.fillRect(poleX, poleY, 8, 320 - poleY);
+            drawFlag(ctx, poleX + 8, poleY);
+            drawPerson(ctx, 120, 320);
+
+            ctx.strokeStyle = "#720019";
+            ctx.lineWidth = 2;
+            ctx.setLineDash([4, 4]);
+            ctx.beginPath();
+            ctx.moveTo(120, 320 - 40);
+            ctx.lineTo(poleX, 320 - 40);
+            ctx.lineTo(poleX, poleY);
+            ctx.moveTo(120, 320 - 40);
+            ctx.lineTo(poleX, poleY);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            ctx.fillStyle = "#333";
+            ctx.font = "12px sans-serif";
+            ctx.fillText(p.jarak + " m", 120 + (p.jarak * 28) / 2, 270);
+            ctx.fillText(p.sudut + "°", 140, 270);
+            ctx.fillText(p.tinggiMata + " m", 80, 295);
+            ctx.fillText("? m", poleX + 12, poleY + 15);
+          },
+        },
+        {
+          id: 2,
+          title: "Soal 2: Tinggi Burung dari Tanah",
+          getDesc: (p) =>
+            `Seekor burung terlihat dari seorang pengamat dengan sudut elevasi <strong>${p.sudut}°</strong>. Jarak mendatar antara pengamat dan pohon tempat burung hinggap adalah <strong>${p.jarak}</strong> meter. Tinggi mata pengamat <strong>${p.tinggiMata}</strong> meter.<br><br><strong>Berapa tinggi burung dari tanah?</strong>`,
+          params: { jarak: 12, sudut: 30, tinggiMata: 1.5 },
+          labels: {
+            jarak: "Jarak (m)",
+            sudut: "Sudut Elevasi (°)",
+            tinggiMata: "Tinggi Pengamat (m)",
+          },
+          calc: (p) => {
+            let h =
+              p.tinggiMata + p.jarak * Math.tan((p.sudut * Math.PI) / 180);
+            return {
+              ans: h.toFixed(2) + " meter",
+              steps: `Tinggi Burung = Tinggi Mata + (Jarak × tan(Sudut))<br>Tinggi Burung = ${p.tinggiMata} + (${p.jarak} × tan(${p.sudut}°)) = <strong>${h.toFixed(2)} meter</strong>`,
+            };
+          },
+          draw: (ctx, p) => {
+            ctx.beginPath();
+            ctx.moveTo(30, 320);
+            ctx.lineTo(520, 320);
+            ctx.strokeStyle = "#08766E";
+            ctx.lineWidth = 4;
+            ctx.stroke();
+            ctx.strokeStyle = "rgba(22,101,52,.20)";
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(30, 325);
+            ctx.lineTo(520, 325);
+            ctx.stroke();
+            let treeX = 100 + p.jarak * 25;
+            let hBurungVisual =
+              p.tinggiMata + p.jarak * Math.tan((p.sudut * Math.PI) / 180);
+            let burungY = 320 - hBurungVisual * 10;
+
+            drawTree(ctx, treeX, 320, 16);
+            drawPerson(ctx, 100, 320);
+
+            ctx.fillStyle = "#d35400";
+            ctx.beginPath();
+            ctx.ellipse(treeX - 12, burungY, 8, 4, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(treeX - 18, burungY - 2, 3, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.strokeStyle = "#720019";
+            ctx.lineWidth = 2;
+            ctx.setLineDash([4, 4]);
+            ctx.beginPath();
+            ctx.moveTo(100, 320 - 40);
+            ctx.lineTo(treeX, 320 - 40);
+            ctx.lineTo(treeX, burungY);
+            ctx.moveTo(100, 320 - 40);
+            ctx.lineTo(treeX, burungY);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            ctx.fillStyle = "#333";
+            ctx.font = "12px sans-serif";
+            ctx.fillText(p.jarak + " m", 100 + p.jarak * 12.5, 270);
+            ctx.fillText(p.sudut + "°", 120, 270);
+            ctx.fillText(p.tinggiMata + " m", 60, 295);
+            ctx.fillText("? m", treeX + 12, burungY + 10);
+          },
+        },
+        {
+          id: 3,
+          title: "Soal 3: Sudut Depresi Pengamat",
+          getDesc: (p) =>
+            `Seorang pengamat berdiri di atas tebing. Sebuah kapal berada <strong>${p.jarak}</strong> meter dari kaki tebing. Tinggi tebing adalah <strong>${p.tinggi}</strong> meter.<br><br><strong>Berapakah sudut depresi pengamat terhadap kapal?</strong>`,
+          params: { tinggi: 15, jarak: 20 },
+          labels: { tinggi: "Tinggi Tebing (m)", jarak: "Jarak Kapal (m)" },
+          calc: (p) => {
+            let deg = (Math.atan(p.tinggi / p.jarak) * 180) / Math.PI;
+            return {
+              ans: deg.toFixed(2) + "°",
+              steps: `tan(θ) = Tinggi Tebing / Jarak Kapal = ${p.tinggi} / ${p.jarak}<br>θ = arctan(${p.tinggi / p.jarak}) = <strong>${deg.toFixed(2)}°</strong>`,
+            };
+          },
+          draw: (ctx, p) => {
+            ctx.beginPath();
+            ctx.moveTo(30, 320);
+            ctx.lineTo(520, 320);
+            ctx.strokeStyle = "#08766E";
+            ctx.lineWidth = 4;
+            ctx.stroke();
+            ctx.strokeStyle = "rgba(22,101,52,.20)";
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(30, 325);
+            ctx.lineTo(520, 325);
+            ctx.stroke();
+            let tebingH = p.tinggi * 9;
+            let tebingY = 320 - tebingH;
+            let kapalX = 400 - p.jarak * 9;
+            drawCliff(ctx, 350, tebingY, 150, tebingH);
+
+            let orangX = 390;
+            drawPerson(ctx, orangX, tebingY, 0.9, "look");
+
+            drawBoat(ctx, kapalX, 275);
+
+            ctx.strokeStyle = "#720019";
+            ctx.lineWidth = 2;
+            ctx.setLineDash([4, 4]);
+            ctx.beginPath();
+            ctx.moveTo(orangX, tebingY - 40);
+            ctx.lineTo(orangX + 60, tebingY - 40);
+            ctx.moveTo(orangX, tebingY - 40);
+            ctx.lineTo(kapalX + 20, 300);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            ctx.fillStyle = "#333";
+            ctx.font = "12px sans-serif";
+            ctx.fillText(p.jarak + " m", kapalX, 335);
+            ctx.fillText(p.tinggi + " m", 330, tebingY + tebingH / 2);
+            ctx.fillText("θ", orangX + 10, tebingY - 25);
+          },
+        },
+        {
+          id: 4,
+          title: "Soal 4: Sudut Kemiringan Tangga",
+          getDesc: (p) =>
+            `Sebuah tangga sepanjang <strong>${p.panjangTangga}</strong> meter disandarkan pada tembok. Kaki tangga berada <strong>${p.jarakBawah}</strong> meter dari tembok.<br><br><strong>Berapakah sudut kemiringan tangga terhadap tanah?</strong>`,
+          params: { panjangTangga: 10, jarakBawah: 6 },
+          labels: {
+            panjangTangga: "Panjang Tangga (m)",
+            jarakBawah: "Jarak Kaki ke Tembok (m)",
+          },
+          calc: (p) => {
+            let deg =
+              (Math.acos(p.jarakBawah / p.panjangTangga) * 180) / Math.PI;
+            return {
+              ans: deg.toFixed(2) + "°",
+              steps: `cos(θ) = Jarak / Panjang Tangga = ${p.jarakBawah} / ${p.panjangTangga}<br>θ = arccos(${p.jarakBawah / p.panjangTangga}) = <strong>${deg.toFixed(2)}°</strong>`,
+            };
+          },
+          draw: (ctx, p) => {
+            ctx.beginPath();
+            ctx.moveTo(30, 320);
+            ctx.lineTo(520, 320);
+            ctx.strokeStyle = "#08766E";
+            ctx.lineWidth = 4;
+            ctx.stroke();
+            ctx.strokeStyle = "rgba(22,101,52,.20)";
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(30, 325);
+            ctx.lineTo(520, 325);
+            ctx.stroke();
+            let tembokX = 420;
+            let kakiX = tembokX - p.jarakBawah * 28;
+            let tinggiTanggaVisual =
+              Math.sqrt(
+                Math.max(
+                  0,
+                  Math.pow(p.panjangTangga, 2) - Math.pow(p.jarakBawah, 2),
+                ),
+              ) * 22;
+            let atasTanggaY = 320 - tinggiTanggaVisual;
+            // wall with subtle brick lines
+            const wallGrad = ctx.createLinearGradient(tembokX, 0, tembokX + 30, 0);
+            wallGrad.addColorStop(0, "#94a3b8");
+            wallGrad.addColorStop(1, "#64748b");
+            ctx.fillStyle = wallGrad;
+            ctx.fillRect(tembokX, atasTanggaY - 15, 30, 200 + (320 - atasTanggaY));
+
+            ctx.strokeStyle = "rgba(15,23,42,.12)";
+            ctx.lineWidth = 1;
+            for (let yy = atasTanggaY; yy < 320; yy += 18) {
+              ctx.beginPath();
+              ctx.moveTo(tembokX, yy);
+              ctx.lineTo(tembokX + 30, yy);
+              ctx.stroke();
+            }
+
+            drawLadder(ctx, kakiX, 320, tembokX, atasTanggaY);
+
+            // small warning cap / contact point
+            ctx.fillStyle = "#facc15";
+            ctx.beginPath(); ctx.arc(tembokX, atasTanggaY, 5, 0, Math.PI*2); ctx.fill();
+
+            ctx.fillStyle = "#333";
+            ctx.font = "12px sans-serif";
+            ctx.fillText(
+              p.panjangTangga + " m",
+              (kakiX + tembokX) / 2 - 15,
+              (320 + atasTanggaY) / 2 - 8,
+            );
+            ctx.fillText(p.jarakBawah + " m", (kakiX + tembokX) / 2 - 10, 335);
+            ctx.fillText("θ", kakiX + 20, 310);
+          },
+        },
+        {
+          id: 5,
+          title: "Soal 5: Tinggi Mata Nyoman",
+          getDesc: (p) =>
+            `Nyoman berdiri sejauh <strong>${p.jarak}</strong> meter dari sebuah tiang bendera. Sudut elevasi menuju puncak tiang adalah <strong>${p.sudut}°</strong>. Tinggi tiang bendera <strong>${p.tinggiTiang}</strong> meter.<br><br><strong>Berapakah tinggi mata Nyoman dari tanah?</strong>`,
+          params: { jarak: 15, sudut: 45, tinggiTiang: 18 },
+          labels: {
+            jarak: "Jarak (m)",
+            sudut: "Sudut Elevasi (°)",
+            tinggiTiang: "Tinggi Tiang (m)",
+          },
+          calc: (p) => {
+            let h =
+              p.tinggiTiang - p.jarak * Math.tan((p.sudut * Math.PI) / 180);
+            return {
+              ans: h.toFixed(2) + " meter",
+              steps: `Tinggi Mata = Tinggi Tiang - (Jarak × tan(Sudut))<br>Tinggi Mata = ${p.tinggiTiang} - (${p.jarak} × tan(${p.sudut}°)) = <strong>${h.toFixed(2)} meter</strong>`,
+            };
+          },
+          draw: (ctx, p) => {
+            ctx.beginPath();
+            ctx.moveTo(30, 320);
+            ctx.lineTo(520, 320);
+            ctx.strokeStyle = "#08766E";
+            ctx.lineWidth = 4;
+            ctx.stroke();
+            ctx.strokeStyle = "rgba(22,101,52,.20)";
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(30, 325);
+            ctx.lineTo(520, 325);
+            ctx.stroke();
+            let tiangH = p.tinggiTiang * 9;
+            let tiangY = 320 - tiangH;
+
+            ctx.fillStyle = "#7f8c8d";
+            ctx.fillRect(420, tiangY, 8, tiangH);
+            drawFlag(ctx, 428, tiangY);
+            drawPerson(ctx, 120, 320);
+
+            ctx.strokeStyle = "#720019";
+            ctx.lineWidth = 2;
+            ctx.setLineDash([4, 4]);
+            ctx.beginPath();
+            ctx.moveTo(120, 320 - 40);
+            ctx.lineTo(420, 320 - 40);
+            ctx.lineTo(420, tiangY);
+            ctx.moveTo(120, 320 - 40);
+            ctx.lineTo(420, tiangY);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            ctx.fillStyle = "#333";
+            ctx.font = "12px sans-serif";
+            ctx.fillText(p.jarak + " m", 270, 270);
+            ctx.fillText(p.sudut + "°", 140, 270);
+            ctx.fillText(p.tinggiTiang + " m", 435, tiangY + 35);
+            ctx.fillText("h m", 80, 295);
+          },
+        },
+        {
+          id: 6,
+          title: "Soal 6: Jarak Anak ke Pohon",
+          getDesc: (p) =>
+            `Seorang anak memiliki tinggi mata <strong>${p.tinggiMata}</strong> meter. Ia melihat puncak pohon setinggi <strong>${p.tinggiPohon}</strong> meter dengan sudut elevasi <strong>${p.sudut}°</strong>.<br><br><strong>Berapakah jarak anak tersebut ke pohon?</strong>`,
+          params: { tinggiMata: 1.5, tinggiPohon: 17.1, sudut: 38 },
+          labels: {
+            tinggiMata: "Tinggi Mata (m)",
+            tinggiPohon: "Tinggi Pohon (m)",
+            sudut: "Sudut Elevasi (°)",
+          },
+          calc: (p) => {
+            let jrk =
+              (p.tinggiPohon - p.tinggiMata) /
+              Math.tan((p.sudut * Math.PI) / 180);
+            return {
+              ans: jrk.toFixed(2) + " meter",
+              steps: `Jarak = (Tinggi Pohon - Tinggi Mata) / tan(Sudut)<br>Jarak = (${p.tinggiPohon} - ${p.tinggiMata}) / tan(${p.sudut}°) = <strong>${jrk.toFixed(2)} meter</strong>`,
+            };
+          },
+          draw: (ctx, p) => {
+            ctx.beginPath();
+            ctx.moveTo(30, 320);
+            ctx.lineTo(520, 320);
+            ctx.strokeStyle = "#08766E";
+            ctx.lineWidth = 4;
+            ctx.stroke();
+            ctx.strokeStyle = "rgba(22,101,52,.20)";
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(30, 325);
+            ctx.lineTo(520, 325);
+            ctx.stroke();
+            let pohonH = p.tinggiPohon * 9;
+            let pohonY = 320 - pohonH;
+
+            drawTree(ctx, 420, 320, p.tinggiPohon);
+            drawPerson(ctx, 120, 320);
+
+            ctx.strokeStyle = "#720019";
+            ctx.lineWidth = 2;
+            ctx.setLineDash([4, 4]);
+            ctx.beginPath();
+            ctx.moveTo(120, 320 - 40);
+            ctx.lineTo(420, 320 - 40);
+            ctx.lineTo(420, pohonY);
+            ctx.moveTo(120, 320 - 40);
+            ctx.lineTo(420, pohonY);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            ctx.fillStyle = "#333";
+            ctx.font = "12px sans-serif";
+            ctx.fillText("? m", 270, 270);
+            ctx.fillText(p.sudut + "°", 140, 270);
+            ctx.fillText(p.tinggiMata + " m", 80, 295);
+            ctx.fillText(p.tinggiPohon + " m", 435, pohonY + 15);
+          },
+        },
+      ];
+
+      function init() {
+        const navButtons = document.getElementById("navButtons");
+        problems.forEach((p, idx) => {
+          let btn = document.createElement("button");
+          btn.innerText = `Soal ${p.id}`;
+          btn.className =
+            "rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-black text-ink shadow-sm transition-all hover:-translate-y-0.5 hover:bg-yellow focus:outline-none";
+          if (idx === 0) {
+            btn.classList.remove("bg-white");
+            btn.classList.add("bg-maroon", "text-white");
+          }
+          btn.onclick = () => selectProblem(idx);
+          navButtons.appendChild(btn);
+        });
+        selectProblem(0);
+      }
+
+      function selectProblem(index) {
+        currentIdx = index;
+        document
+          .querySelectorAll(".nav-buttons button")
+          .forEach((b, i) => {
+            b.classList.remove("bg-maroon", "text-white");
+            b.classList.add("bg-white", "text-ink");
+            if (i === index) {
+              b.classList.remove("bg-white", "text-ink");
+              b.classList.add("bg-maroon", "text-white");
+            }
+          });
+        document.getElementById("resultBox").style.display = "none";
+        renderControlPanel();
+        updateSimulation();
+      }
+
+      function renderControlPanel() {
+        let p = problems[currentIdx];
+        updateDescription();
+        let panel = document.getElementById("controlPanel");
+        panel.innerHTML = `
+          <div class="mb-1 flex items-center gap-2">
+            <span class="text-sm font-black uppercase tracking-wider text-ink">
+              Kontrol Parameter
+            </span>
+          </div>
+        `;
+        for (let key in p.params) {
+          let div = document.createElement("div");
+          div.className =
+            "rounded-lg border border-slate-300 bg-white p-3 shadow-sm";
+          div.innerHTML = `
+            <label class="mb-1.5 block text-xs font-black uppercase tracking-wide text-ink">${p.labels[key]}</label>
+            <input
+              type="number"
+              step="0.1"
+              value="${p.params[key]}"
+              oninput="updateParam('${key}', this.value)"
+              class="w-full rounded-md border-2 border-[#B8B09F] bg-cream px-3 py-2 text-sm font-bold text-ink outline-none transition focus:border-teal focus:ring-2 focus:ring-teal/20"
+            >
+          `;
+          panel.appendChild(div);
+        }
+      }
+
+      function updateDescription() {
+        let p = problems[currentIdx];
+        document.getElementById("problemDesc").innerHTML =
+          `<strong>${p.title}</strong><br>${p.getDesc(p.params)}`;
+      }
+
+      function updateParam(key, val) {
+        problems[currentIdx].params[key] = parseFloat(val) || 0;
+        document.getElementById("resultBox").style.display = "none";
+        updateDescription();
+        updateSimulation();
+      }
+
+      function toggleResult() {
+        let box = document.getElementById("resultBox");
+        let p = problems[currentIdx];
+        let res = p.calc(p.params);
+        box.innerHTML = `
+          <div class="mb-2 text-[10px] font-black uppercase tracking-[0.14em] text-yellow">Hasil & Langkah</div>
+          <div class="text-sm leading-relaxed text-white">
+            <strong>Jawaban Akhir:</strong> ${res.ans}
+            <br><br>
+            <strong>Langkah Penyelesaian:</strong><br>${res.steps}
+          </div>
+        `;
+        box.style.display = box.style.display === "block" ? "none" : "block";
+      }
+
+      function updateSimulation() {
+        let p = problems[currentIdx];
+        let canvas = document.getElementById("simCanvas");
+        let ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // illustrated sky / ground backdrop
+        const sky = ctx.createLinearGradient(0, 0, 0, canvas.height);
+        sky.addColorStop(0, "#DDE8F7");
+        sky.addColorStop(0.68, "#F7F3E5");
+        sky.addColorStop(0.681, "#E4E0D4");
+        sky.addColorStop(1, "#D6CFAF");
+        ctx.fillStyle = sky;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // soft clouds
+        ctx.fillStyle = "rgba(255,255,255,.75)";
+        [[80,55,28],[105,50,22],[130,58,25],[430,70,30],[455,64,22],[478,73,27]].forEach(([x,y,r]) => {
+          ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2); ctx.fill();
+        });
+
+        p.draw(ctx, p.params);
+      }
+
+      window.onload = init;
+    
+  </script>
+</body>
+</html>

@@ -1,0 +1,1196 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1"
+    />
+    <title>Detektif Bentuk - Menjodohkan Bangun Datar</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800;900&family=Lato:wght@400;700;900&family=Londrina+Solid:wght@300;400&display=swap");
+
+      :root {
+        --grid-bg: #eaf1fb;
+        --grid-line: #d3e2f5;
+        --white: #ffffff;
+        --ink: #3a3a3a;
+        --coral: #ff6b6b;
+        --leaf-green: #4cd787;
+        --indigo: #5b6fd8;
+        --card-shadow: 0 8px 0 rgba(0, 0, 0, 0.08);
+        --brand-ink: #17121f;
+        --brand-yellow: #ffd84d;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        font-family: "Nunito", sans-serif;
+        color: var(--ink);
+        min-height: 100vh;
+        padding: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #b6d6ec;
+      }
+
+      .page-shell {
+        width: 100%;
+        max-width: 900px;
+        margin: auto;
+      }
+      .sim-container {
+        width: 100%;
+        background: #fff;
+        border: 2px solid var(--brand-ink);
+        border-radius: 22px;
+        overflow: hidden;
+        box-shadow: 7px 7px 0 var(--brand-ink);
+      }
+
+      .navy-header {
+        background: var(--brand-ink);
+        color: #fff;
+        padding: 14px 22px;
+        border-bottom: 4px solid var(--brand-yellow);
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        row-gap: 10px;
+      }
+      .header-brand {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .navy-header img {
+        width: 50px;
+        height: 50px;
+        object-fit: contain;
+        flex-shrink: 0;
+      }
+      .navy-header h1 {
+        margin: 0;
+        color: #fff;
+        font-family: "Londrina Solid", cursive;
+        font-size: 1.6rem;
+        font-weight: 400;
+        letter-spacing: 0.02em;
+      }
+      .header-hint {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-family: "Lato", sans-serif;
+        font-weight: 700;
+        font-size: 0.72rem;
+        color: #e9e1d0;
+      }
+      .header-hint .mag {
+        font-size: 1.1rem;
+      }
+
+      .header-level-picker {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        margin-left: auto;
+      }
+      .picker-label {
+        margin: 0;
+        color: #e9e1d0;
+        font-family: "Lato", sans-serif;
+        font-weight: 700;
+        font-size: 0.7rem;
+      }
+      .level-map {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .stone {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        position: relative;
+        cursor: pointer;
+        background: none;
+        border: none;
+        font-family: inherit;
+      }
+      .stone-circle {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: var(--white);
+        border: 3px solid rgba(255, 255, 255, 0.25);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Fredoka", sans-serif;
+        font-weight: 700;
+        font-size: 14px;
+        color: #5b6fd8;
+        transition:
+          transform 0.2s ease,
+          border-color 0.2s ease,
+          box-shadow 0.2s ease;
+        position: relative;
+      }
+      .stone-label {
+        font-family: "Fredoka", sans-serif;
+        font-weight: 600;
+        font-size: 9px;
+        color: rgba(233, 225, 208, 0.85);
+        text-align: center;
+      }
+      .stone.active .stone-circle {
+        border-color: var(--brand-yellow);
+        box-shadow: 0 0 0 4px rgba(255, 216, 77, 0.35);
+        transform: scale(1.12);
+      }
+      .stone.active .stone-label {
+        color: var(--brand-yellow);
+      }
+      .stone.done .stone-circle {
+        border-color: var(--leaf-green);
+        background: #eafff1;
+      }
+      .stone.done .stone-circle::after {
+        content: "✔";
+        position: absolute;
+        bottom: -3px;
+        right: -3px;
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        background: var(--leaf-green);
+        color: #fff;
+        font-size: 9px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid var(--brand-ink);
+      }
+      .stone-line {
+        width: 18px;
+        height: 3px;
+        background: rgba(255, 255, 255, 0.25);
+        margin: 0 2px 15px;
+        border-radius: 2px;
+      }
+      .stone-line.done {
+        background: var(--leaf-green);
+      }
+
+      @media (max-width: 600px) {
+        .header-level-picker {
+          flex: 1 0 100%;
+          margin-left: 0;
+        }
+      }
+
+      @media (max-width: 600px) {
+        .navy-header {
+          padding: 12px 14px;
+        }
+        .navy-header img {
+          width: 40px;
+          height: 40px;
+        }
+        .navy-header h1 {
+          font-size: 1.2rem;
+        }
+        .app-footer {
+          padding: 10px 14px;
+        }
+      }
+
+      .sim-body {
+        position: relative;
+        overflow: hidden;
+        background-color: var(--grid-bg);
+        background-image:
+          linear-gradient(var(--grid-line) 1px, transparent 1px),
+          linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+        background-size: 26px 26px;
+        padding: 20px 18px 26px;
+      }
+
+      .app-footer {
+        background: var(--brand-ink);
+        color: rgba(255, 255, 255, 0.72);
+        padding: 10px 22px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+        font-family: "Lato", sans-serif;
+        font-size: 0.72rem;
+        font-weight: 700;
+        border-top: 4px solid var(--brand-yellow);
+      }
+      .score-badge {
+        font-family: "Fredoka", sans-serif;
+        font-weight: 600;
+        font-size: 16px;
+        color: #e9e1d0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .score-badge span.num {
+        color: var(--brand-yellow);
+      }
+      .progress-badge {
+        font-family: "Fredoka", sans-serif;
+        font-weight: 600;
+        font-size: 15px;
+        color: #e9e1d0;
+      }
+
+      .game-instruction {
+        text-align: center;
+        font-family: "Fredoka", sans-serif;
+        font-weight: 600;
+        font-size: 17px;
+        color: #2b3a6b;
+        margin: 2px auto 18px;
+        position: relative;
+        z-index: 2;
+      }
+
+      .match-board {
+        position: relative;
+        z-index: 2;
+        max-width: 840px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: center;
+        gap: 180px;
+      }
+      .match-svg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1;
+        overflow: visible;
+      }
+      .match-line {
+        fill: none;
+        stroke: var(--indigo);
+        stroke-width: 3;
+      }
+      .drag-line {
+        fill: none;
+        stroke: var(--indigo);
+        stroke-width: 3;
+        stroke-dasharray: 6 6;
+      }
+
+      .match-col {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        flex: 1;
+        min-width: 0;
+        position: relative;
+        z-index: 2;
+      }
+      #colLeft {
+        align-items: flex-end;
+      }
+      #colRight {
+        align-items: flex-start;
+      }
+
+      .match-item {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: var(--white);
+        border-radius: 14px;
+        padding: 5px 14px;
+        box-shadow: var(--card-shadow);
+        border-bottom: 4px solid #eef0f4;
+        transition:
+          background 0.15s ease,
+          border-color 0.15s ease;
+      }
+      .match-item.picture {
+        justify-content: flex-start;
+      }
+      .match-item.answer {
+        justify-content: flex-start;
+        max-width: 230px;
+      }
+      .match-item svg.drawing {
+        width: 80px;
+        height: 80px;
+        flex-shrink: 0;
+      }
+      .match-item .shapes {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+      .match-item .qnum {
+        font-family: "Fredoka", sans-serif;
+        font-weight: 700;
+        font-size: 13px;
+        color: #9aa0ad;
+        margin-right: 2px;
+      }
+
+      .match-item.correct {
+        background: #eafcf1;
+        border-color: var(--leaf-green);
+      }
+      .match-item.wrong {
+        animation: shake 0.35s ease;
+        background: #fff0f0;
+        border-color: var(--coral);
+      }
+
+      .match-dot {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: #fff;
+        border: 3px solid var(--indigo);
+        cursor: grab;
+        touch-action: none;
+        z-index: 3;
+        transition:
+          background 0.15s ease,
+          border-color 0.15s ease;
+      }
+      .match-dot.right-dot {
+        right: -9px;
+      }
+      .match-dot.left-dot {
+        left: -9px;
+      }
+      .match-dot.used {
+        background: #fff;
+        border-color: var(--indigo);
+        cursor: grab;
+      }
+      .match-dot.active {
+        box-shadow: 0 0 0 5px rgba(91, 111, 216, 0.25);
+      }
+
+      @keyframes shake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        25% {
+          transform: translateX(-6px);
+        }
+        75% {
+          transform: translateX(6px);
+        }
+      }
+
+      .overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(20, 25, 50, 0.55);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 200;
+        padding: 20px;
+      }
+      .overlay.show {
+        display: flex;
+      }
+      .modal {
+        background: var(--white);
+        border-radius: 26px;
+        padding: 32px 26px;
+        text-align: center;
+        max-width: 360px;
+        box-shadow: 0 20px 0 rgba(0, 0, 0, 0.15);
+      }
+      .modal .big-icon {
+        font-size: 52px;
+      }
+      .modal h2 {
+        font-family: "Fredoka", sans-serif;
+        color: #2b3a6b;
+        margin: 8px 0;
+      }
+      .modal p {
+        font-weight: 700;
+        font-size: 16px;
+        margin: 6px 0 20px;
+        color: #4a5a44;
+      }
+      .modal .btn-row {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .modal button {
+        font-family: "Fredoka", sans-serif;
+        font-weight: 600;
+        font-size: 16px;
+        border: none;
+        border-radius: 50px;
+        padding: 12px 24px;
+        cursor: pointer;
+      }
+      .modal button.primary {
+        background: var(--brand-yellow);
+        box-shadow: 0 5px 0 #d9a716;
+        color: #5b3d00;
+      }
+      .modal button.secondary {
+        background: #eef3ea;
+        box-shadow: 0 5px 0 #cdd7c4;
+        color: #4a5a44;
+      }
+      .modal button:active {
+        transform: translateY(4px);
+        box-shadow: none;
+      }
+
+      .confetti {
+        position: fixed;
+        top: -40px;
+        font-size: 22px;
+        z-index: 150;
+        pointer-events: none;
+        animation: fall linear forwards;
+      }
+      @keyframes fall {
+        to {
+          transform: translateY(110vh) rotate(360deg);
+          opacity: 0.4;
+        }
+      }
+
+      @media (max-width: 600px) {
+        .match-board {
+          gap: 54px;
+        }
+        .match-item {
+          padding: 5px 10px;
+        }
+        .match-item svg.drawing {
+          width: 72px;
+          height: 72px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-shell">
+      <div class="sim-container">
+        <header class="navy-header">
+          <div class="header-brand">
+            <img
+              src="data:image/png;base64,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"
+              alt="Logo Yudhistira"
+            />
+            <div>
+              <h1>Mengurai Bentuk</h1>
+            </div>
+          </div>
+          <div class="header-level-picker">
+            <p class="picker-label">Ketuk untuk ganti level</p>
+            <div class="level-map" id="levelMap"></div>
+          </div>
+        </header>
+
+        <div class="sim-body">
+          <p class="game-instruction">
+            Tarik titik di gambar ke titik pada bentuk penyusunnya yang cocok
+            ya!
+          </p>
+          <div
+            style="
+              text-align: center;
+              margin: -6px 0 16px;
+              position: relative;
+              z-index: 2;
+            "
+          >
+            <button
+              id="resetLevelBtn"
+              style="
+                display: none;
+                font-family: &quot;Fredoka&quot;, sans-serif;
+                font-weight: 600;
+                font-size: 13px;
+                color: #5b6fd8;
+                background: #fff;
+                border: 2px solid #cdd3ec;
+                border-radius: 20px;
+                padding: 6px 16px;
+                cursor: pointer;
+              "
+            >
+              🔄 Ulangi Level Ini
+            </button>
+          </div>
+
+          <div class="match-board" id="board">
+            <svg id="matchSvg" class="match-svg"></svg>
+            <div class="match-col" id="colLeft"></div>
+            <div class="match-col" id="colRight"></div>
+          </div>
+
+          <div
+            style="
+              text-align: center;
+              margin: 20px 0 0;
+              position: relative;
+              z-index: 3;
+            "
+          >
+            <button
+              id="checkBtn"
+              style="
+                font-family: &quot;Fredoka&quot;, sans-serif;
+                font-weight: 600;
+                font-size: 15px;
+                color: #5b3d00;
+                background: var(--brand-yellow);
+                border: none;
+                border-radius: 24px;
+                padding: 10px 22px;
+                cursor: pointer;
+                box-shadow: 0 5px 0 #d9a716;
+              "
+            >
+              ✓ Periksa Jawaban
+            </button>
+            <div
+              id="checkFeedback"
+              style="
+                min-height: 28px;
+                margin-top: 10px;
+                font-family: &quot;Fredoka&quot;, sans-serif;
+                font-weight: 600;
+                font-size: 15px;
+                color: #2b3a6b;
+              "
+            ></div>
+          </div>
+
+          <div class="overlay" id="overlay">
+            <div class="modal">
+              <div class="big-icon" id="modalIcon">🎉</div>
+              <h2 id="modalTitle">Hebat sekali!</h2>
+              <p id="modalMsg">Skor kamu: 0/100</p>
+              <div class="btn-row" id="modalBtnRow">
+                <button class="primary" id="modalBtnPrimary">
+                  Lanjut ke Level Berikutnya ▶
+                </button>
+                <button class="secondary" id="modalBtnSecondary">
+                  Selesai, Cukup Dulu 👋
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <footer class="app-footer">
+          <div class="score-badge">
+            ⭐ Skor: <span class="num" id="scoreVal">0</span>/<span
+              id="scoreMax"
+              >100</span
+            >
+          </div>
+          <div class="progress-badge" id="progressVal">Benar: 0 / 5</div>
+        </footer>
+      </div>
+    </div>
+
+    <script>
+      // ---------- Ikon bangun datar sederhana (garis luar saja) ----------
+      function shapeIcon(type, color) {
+        color = color || "#5b6fd8";
+        switch (type) {
+          case "rectangle":
+            return `<svg width="76" height="48" viewBox="0 0 44 28"><rect x="2" y="4" width="40" height="20" fill="none" stroke="${color}" stroke-width="2.4" rx="2"/></svg>`;
+          case "thin-rectangle":
+            return `<svg width="34" height="52" viewBox="0 0 20 30"><rect x="7" y="2" width="6" height="26" fill="none" stroke="${color}" stroke-width="2.4" rx="1"/></svg>`;
+          case "square":
+            return `<svg width="48" height="48" viewBox="0 0 28 28"><rect x="3" y="3" width="22" height="22" fill="none" stroke="${color}" stroke-width="2.4" rx="2"/></svg>`;
+          case "triangle":
+            return `<svg width="54" height="48" viewBox="0 0 32 28"><polygon points="16,3 3,25 29,25" fill="none" stroke="${color}" stroke-width="2.4" stroke-linejoin="round"/></svg>`;
+          case "right-triangle":
+            return `<svg width="54" height="52" viewBox="0 0 32 30"><polygon points="4,26 4,6 26,26" fill="none" stroke="${color}" stroke-width="2.4" stroke-linejoin="round" transform="rotate(15 15 16)"/></svg>`;
+          case "circle":
+            return `<svg width="48" height="48" viewBox="0 0 28 28"><circle cx="14" cy="14" r="11" fill="none" stroke="${color}" stroke-width="2.4"/></svg>`;
+          case "trapezoid":
+            return `<svg width="76" height="48" viewBox="0 0 44 28"><polygon points="10,3 34,3 42,25 2,25" fill="none" stroke="${color}" stroke-width="2.4" stroke-linejoin="round"/></svg>`;
+          default:
+            return "";
+        }
+      }
+
+      function shapesRow(list) {
+        return `<span class="shapes">${list.map((t) => shapeIcon(t)).join("")}</span>`;
+      }
+
+      // ---------- Gambar gabungan (SVG solid) untuk tiap level ----------
+      const levels = [
+        {
+          name: "Level 1",
+          items: [
+            {
+              id: 0,
+              answer: ["square", "triangle"],
+              svg: `<svg class="drawing" viewBox="0 0 140 140"><rect x="35" y="65" width="60" height="60" fill="#e0793c"/><polygon points="25,65 65,20 105,65" fill="#c65a2e"/></svg>`,
+            },
+            {
+              id: 1,
+              answer: [
+                "triangle",
+                "right-triangle",
+                "right-triangle",
+                "rectangle",
+              ],
+              svg: `<svg class="drawing" viewBox="0 0 140 140"><rect x="55" y="40" width="30" height="70" fill="#3b6fd1"/><polygon points="55,40 70,10 85,40" fill="#2a54a8"/><polygon points="55,88 55,118 35,118" fill="#2a54a8"/><polygon points="85,88 85,118 105,118" fill="#2a54a8"/></svg>`,
+            },
+            {
+              id: 2,
+              answer: ["triangle", "circle"],
+              svg: `<svg class="drawing" viewBox="0 0 140 140"><polygon points="45,58 95,58 70,122" fill="#e8b97a"/><circle cx="70" cy="42" r="28" fill="#f2a6c5"/></svg>`,
+            },
+            {
+              id: 3,
+              answer: ["trapezoid", "right-triangle", "thin-rectangle"],
+              svg: `<svg class="drawing" viewBox="0 0 140 140"><polygon points="20,105 120,105 100,130 40,130" fill="#2f8f7a"/><rect x="66" y="30" width="7" height="76" fill="#7a5230"/><polygon points="73,32 73,80 116,80" fill="#f2c94c"/></svg>`,
+            },
+            {
+              id: 4,
+              answer: ["triangle", "triangle", "rectangle"],
+              svg: `<svg class="drawing" viewBox="0 0 140 140"><polygon points="70,15 38,68 102,68" fill="#8a5fd1"/><polygon points="70,125 38,68 102,68" fill="#b98be0"/><rect x="65" y="125" width="10" height="18" fill="#5a3a99"/></svg>`,
+            },
+          ],
+        },
+        {
+          name: "Level 2",
+          items: [
+            {
+              id: 0,
+              answer: ["rectangle", "square", "circle", "circle"],
+              svg: `<svg class="drawing" viewBox="0 0 140 140"><rect x="10" y="55" width="65" height="45" fill="#4a7fd6"/><rect x="78" y="70" width="32" height="32" fill="#2f5aa8"/><circle cx="35" cy="105" r="12" fill="#333"/><circle cx="90" cy="105" r="12" fill="#333"/></svg>`,
+            },
+            {
+              id: 1,
+              answer: ["triangle", "triangle", "thin-rectangle"],
+              svg: `<svg class="drawing" viewBox="0 0 140 140"><rect x="64" y="105" width="12" height="22" fill="#7a5230"/><polygon points="70,105 35,65 105,65" fill="#2f8f5a"/><polygon points="70,70 45,35 95,35" fill="#3aa06a"/></svg>`,
+            },
+            {
+              id: 2,
+              answer: [
+                "square",
+                "rectangle",
+                "thin-rectangle",
+                "thin-rectangle",
+              ],
+              svg: `<svg class="drawing" viewBox="0 0 140 140"><rect x="50" y="25" width="40" height="40" fill="#8a8f99"/><rect x="40" y="65" width="60" height="50" fill="#5b6270"/><rect x="20" y="70" width="14" height="40" fill="#5b6270"/><rect x="106" y="70" width="14" height="40" fill="#5b6270"/></svg>`,
+            },
+            {
+              id: 3,
+              answer: ["thin-rectangle", "right-triangle", "circle"],
+              svg: `<svg class="drawing" viewBox="0 0 140 140"><rect x="45" y="40" width="8" height="90" fill="#7a5230"/><polygon points="53,40 53,70 100,40" fill="#d9534f"/><circle cx="49" cy="35" r="8" fill="#e8b93d"/></svg>`,
+            },
+            {
+              id: 4,
+              answer: ["trapezoid", "thin-rectangle", "rectangle"],
+              svg: `<svg class="drawing" viewBox="0 0 140 140"><polygon points="40,40 100,40 90,75 50,75" fill="#e8b93d"/><rect x="63" y="75" width="14" height="30" fill="#c9971f"/><rect x="45" y="105" width="50" height="15" fill="#a97a15"/></svg>`,
+            },
+          ],
+        },
+        {
+          name: "Level 3",
+          items: [
+            {
+              id: 0,
+              answer: [
+                "rectangle",
+                "trapezoid",
+                "circle",
+                "circle",
+                "right-triangle",
+              ],
+              svg: `<svg class="drawing" viewBox="0 0 140 140"><rect x="20" y="75" width="90" height="30" fill="#d9534f"/><polygon points="45,75 85,75 75,50 55,50" fill="#a83a32"/><circle cx="40" cy="110" r="13" fill="#222"/><circle cx="95" cy="110" r="13" fill="#222"/><polygon points="105,60 105,75 122,75" fill="#a83a32"/></svg>`,
+            },
+            {
+              id: 1,
+              answer: ["triangle", "rectangle", "square", "square"],
+              svg: `<svg class="drawing" viewBox="0 0 140 140"><polygon points="30,45 70,12 110,45" fill="#c65a2e"/><rect x="32" y="45" width="76" height="22" fill="#e0793c"/><rect x="30" y="67" width="58" height="58" fill="#d9692f"/><rect x="48" y="85" width="20" height="20" fill="#fff6b0"/></svg>`,
+            },
+            {
+              id: 2,
+              answer: ["thin-rectangle", "square", "triangle", "circle"],
+              svg: `<svg class="drawing" viewBox="0 0 140 140"><rect x="62" y="60" width="16" height="65" fill="#8a8f99"/><rect x="45" y="35" width="50" height="32" fill="#6b7280"/><polygon points="45,35 70,10 95,35" fill="#4b5160"/><circle cx="70" cy="51" r="12" fill="#fdf6d8"/></svg>`,
+            },
+            {
+              id: 3,
+              answer: [
+                "trapezoid",
+                "thin-rectangle",
+                "right-triangle",
+                "triangle",
+              ],
+              svg: `<svg class="drawing" viewBox="0 0 140 140"><polygon points="15,110 125,110 105,130 35,130" fill="#2f8f7a"/><rect x="68" y="25" width="6" height="85" fill="#7a5230"/><polygon points="74,28 74,80 118,80" fill="#f2c94c"/><polygon points="50,45 30,80 66,80" fill="#e0793c"/></svg>`,
+            },
+            {
+              id: 4,
+              answer: [
+                "triangle",
+                "rectangle",
+                "circle",
+                "right-triangle",
+                "right-triangle",
+              ],
+              svg: `<svg class="drawing" viewBox="0 0 140 140"><rect x="55" y="40" width="30" height="70" fill="#3b6fd1"/><polygon points="55,40 70,10 85,40" fill="#2a54a8"/><circle cx="70" cy="60" r="10" fill="#eaf6ff"/><polygon points="55,88 55,118 35,118" fill="#2a54a8"/><polygon points="85,88 85,118 105,118" fill="#2a54a8"/></svg>`,
+            },
+          ],
+        },
+      ];
+
+      // Urutan kolom kanan diacak supaya tidak sejajar dengan kolom kiri
+      const RIGHT_ORDER = [2, 4, 0, 3, 1];
+      const MAX_SCORE = 100;
+
+      let levelIndex = 0;
+      let score = 0;
+      let solved = new Set();
+      let connections = []; // {a, sideA, b, sideB}
+      let dragging = null;
+      let startPoint = null;
+      const levelCompleted = levels.map(() => false);
+
+      // Simpan jawaban tiap level agar ketika kembali, garis tetap ada.
+      const levelState = levels.map(() => ({
+        pairs: [], // [{pictureId, answerId}]
+        checked: false,
+        complete: false,
+      }));
+
+      const board = document.getElementById("board");
+      const colLeft = document.getElementById("colLeft");
+      const colRight = document.getElementById("colRight");
+      const scoreVal = document.getElementById("scoreVal");
+      const progressVal = document.getElementById("progressVal");
+      const overlay = document.getElementById("overlay");
+      const levelMap = document.getElementById("levelMap");
+      const modalIcon = document.getElementById("modalIcon");
+      const modalTitle = document.getElementById("modalTitle");
+      const modalMsg = document.getElementById("modalMsg");
+      const modalBtnPrimary = document.getElementById("modalBtnPrimary");
+      const modalBtnSecondary = document.getElementById("modalBtnSecondary");
+      const checkBtn = document.getElementById("checkBtn");
+      const checkFeedback = document.getElementById("checkFeedback");
+
+      document.getElementById("scoreMax").textContent = MAX_SCORE;
+
+      function renderMap() {
+        levelMap.innerHTML = "";
+        levels.forEach((lv, i) => {
+          const stone = document.createElement("button");
+          stone.className = "stone";
+          stone.type = "button";
+          stone.dataset.i = i;
+          stone.innerHTML = `<div class="stone-circle">${i + 1}</div><div class="stone-label">${lv.name}</div>`;
+          stone.addEventListener("click", () => loadLevel(i));
+          levelMap.appendChild(stone);
+          if (i < levels.length - 1) {
+            const line = document.createElement("div");
+            line.className = "stone-line";
+            line.dataset.i = i;
+            levelMap.appendChild(line);
+          }
+        });
+        updateMap();
+      }
+
+      function updateMap() {
+        document.querySelectorAll(".stone").forEach((el) => {
+          const i = parseInt(el.dataset.i, 10);
+          el.classList.toggle("active", i === levelIndex);
+          el.classList.toggle("done", levelCompleted[i]);
+        });
+        document.querySelectorAll(".stone-line").forEach((el) => {
+          const i = parseInt(el.dataset.i, 10);
+          el.classList.toggle("done", levelCompleted[i]);
+        });
+      }
+
+      function saveCurrentPairs() {
+        levelState[levelIndex].pairs = connections.map((c) => ({
+          pictureId:
+            c.a.dataset.type === "picture" ? c.a.dataset.id : c.b.dataset.id,
+          answerId:
+            c.a.dataset.type === "answer" ? c.a.dataset.id : c.b.dataset.id,
+        }));
+      }
+
+      function loadLevel(idx) {
+        overlay.classList.remove("show");
+        levelIndex = idx;
+        dragging = null;
+        startPoint = null;
+        connections = [];
+        solved = new Set();
+
+        const items = levels[idx].items;
+        const state = levelState[idx];
+
+        score = state.complete ? MAX_SCORE : 0;
+        scoreVal.textContent = score;
+        progressVal.textContent = state.complete
+          ? `Benar: ${items.length} / ${items.length}`
+          : `Terpasang: ${state.pairs.length} / ${items.length}`;
+        document.getElementById("resetLevelBtn").style.display = state.complete
+          ? "inline-block"
+          : "none";
+        checkFeedback.textContent = state.complete
+          ? "Jawaban level ini sudah benar."
+          : "";
+        checkFeedback.style.color = state.complete ? "#218b4b" : "#2b3a6b";
+        checkBtn.style.display = state.complete ? "none" : "inline-block";
+
+        updateMap();
+        render();
+
+        // Pulihkan garis yang pernah dibuat pada level ini.
+        requestAnimationFrame(() => {
+          state.pairs.forEach((p) => {
+            const pic = colLeft.querySelector(
+              `.match-item[data-id="${p.pictureId}"]`,
+            );
+            const ans = colRight.querySelector(
+              `.match-item[data-id="${p.answerId}"]`,
+            );
+            if (pic && ans)
+              connections.push({
+                a: pic,
+                sideA: "right",
+                b: ans,
+                sideB: "left",
+              });
+          });
+          syncUsedDots();
+          drawConnections();
+        });
+      }
+
+      function render() {
+        const items = levels[levelIndex].items;
+        colLeft.innerHTML = "";
+        colRight.innerHTML = "";
+
+        items.forEach((it, i) => {
+          const el = document.createElement("div");
+          el.className = "match-item picture";
+          el.dataset.type = "picture";
+          el.dataset.id = it.id;
+          el.innerHTML = `
+        <span class="qnum">${i + 1}.</span>
+        ${it.svg}
+        <span class="match-dot right-dot" data-side="right"></span>
+      `;
+          colLeft.appendChild(el);
+          el.querySelector(".match-dot").addEventListener("pointerdown", (ev) =>
+            startDrag(ev, el, "right"),
+          );
+        });
+
+        RIGHT_ORDER.forEach((idx) => {
+          const it = items[idx];
+          const el = document.createElement("div");
+          el.className = "match-item answer";
+          el.dataset.type = "answer";
+          el.dataset.id = it.id;
+          el.innerHTML = `
+        <span class="match-dot left-dot" data-side="left"></span>
+        ${shapesRow(it.answer)}
+      `;
+          colRight.appendChild(el);
+          el.querySelector(".match-dot").addEventListener("pointerdown", (ev) =>
+            startDrag(ev, el, "left"),
+          );
+        });
+      }
+
+      function pointFor(el, side) {
+        const dot = el.querySelector(`.match-dot[data-side="${side}"]`);
+        if (!dot) return null;
+        const r = dot.getBoundingClientRect(),
+          br = board.getBoundingClientRect();
+        return {
+          x: r.left + r.width / 2 - br.left,
+          y: r.top + r.height / 2 - br.top,
+        };
+      }
+
+      function drawConnections(temp) {
+        const svg = document.getElementById("matchSvg");
+        svg.innerHTML = "";
+        connections.forEach((c) => {
+          const a = pointFor(c.a, c.sideA),
+            b = pointFor(c.b, c.sideB);
+          if (!a || !b) return;
+          svg.insertAdjacentHTML(
+            "beforeend",
+            `<path class="match-line" d="M ${a.x} ${a.y} C ${(a.x + b.x) / 2} ${a.y}, ${(a.x + b.x) / 2} ${b.y}, ${b.x} ${b.y}"/>`,
+          );
+        });
+        if (temp && temp.a && temp.b) {
+          const a = temp.a,
+            b = temp.b;
+          svg.insertAdjacentHTML(
+            "beforeend",
+            `<path class="drag-line" d="M ${a.x} ${a.y} C ${(a.x + b.x) / 2} ${a.y}, ${(a.x + b.x) / 2} ${b.y}, ${b.x} ${b.y}"/>`,
+          );
+        }
+      }
+
+      function syncUsedDots() {
+        document
+          .querySelectorAll(".match-dot")
+          .forEach((d) => d.classList.remove("used"));
+        connections.forEach((c) => {
+          c.a
+            .querySelector(`.match-dot[data-side="${c.sideA}"]`)
+            ?.classList.add("used");
+          c.b
+            .querySelector(`.match-dot[data-side="${c.sideB}"]`)
+            ?.classList.add("used");
+        });
+      }
+
+      function startDrag(ev, item, side) {
+        if (levelState[levelIndex].complete) return;
+        ev.preventDefault();
+        dragging = { item, side };
+        startPoint = pointFor(item, side);
+        item
+          .querySelector(`.match-dot[data-side="${side}"]`)
+          .classList.add("active");
+        document.addEventListener("pointermove", onDrag);
+        document.addEventListener("pointerup", endDrag, { once: true });
+      }
+
+      function onDrag(ev) {
+        if (!dragging) return;
+        const r = board.getBoundingClientRect();
+        drawConnections({
+          a: startPoint,
+          b: { x: ev.clientX - r.left, y: ev.clientY - r.top },
+        });
+      }
+
+      function endDrag(ev) {
+        document.removeEventListener("pointermove", onDrag);
+        if (!dragging) return;
+        const target = document.elementFromPoint(ev.clientX, ev.clientY);
+        const dot =
+          target && target.closest ? target.closest(".match-dot") : null;
+        if (dot) {
+          const other = dot.closest(".match-item");
+          if (other && other !== dragging.item)
+            makeConnection(
+              dragging.item,
+              dragging.side,
+              other,
+              dot.dataset.side,
+            );
+        }
+        const activeDot = dragging.item.querySelector(
+          `.match-dot[data-side="${dragging.side}"]`,
+        );
+        if (activeDot) activeDot.classList.remove("active");
+        dragging = null;
+        drawConnections();
+      }
+
+      // Saat menjodohkan TIDAK memeriksa benar/salah.
+      function makeConnection(a, sideA, b, sideB) {
+        const valid =
+          (a.dataset.type === "picture" &&
+            sideA === "right" &&
+            b.dataset.type === "answer" &&
+            sideB === "left") ||
+          (a.dataset.type === "answer" &&
+            sideA === "left" &&
+            b.dataset.type === "picture" &&
+            sideB === "right");
+        if (!valid) return;
+
+        // Normalisasi agar a selalu gambar dan b selalu jawaban.
+        let pic = a,
+          ans = b;
+        if (a.dataset.type === "answer") {
+          pic = b;
+          ans = a;
+        }
+
+        // Satu gambar dan satu jawaban hanya boleh punya satu pasangan.
+        connections = connections.filter((c) => c.a !== pic && c.b !== ans);
+        connections.push({ a: pic, sideA: "right", b: ans, sideB: "left" });
+
+        saveCurrentPairs();
+        levelState[levelIndex].checked = false;
+        document
+          .querySelectorAll(".match-item")
+          .forEach((el) => el.classList.remove("correct", "wrong"));
+        checkFeedback.textContent = "";
+        progressVal.textContent = `Terpasang: ${connections.length} / ${levels[levelIndex].items.length}`;
+        document.getElementById("resetLevelBtn").style.display = "none";
+        syncUsedDots();
+        drawConnections();
+      }
+
+      function checkAnswers() {
+        const items = levels[levelIndex].items;
+        if (connections.length < items.length) {
+          checkFeedback.textContent = "Jodohkan semua gambar dulu, ya!";
+          checkFeedback.style.color = "#d84d4d";
+          return;
+        }
+
+        let correctCount = 0;
+        connections.forEach((c) => {
+          const ok = c.a.dataset.id === c.b.dataset.id;
+          if (ok) correctCount++;
+          c.a.classList.toggle("correct", ok);
+          c.b.classList.toggle("correct", ok);
+          c.a.classList.toggle("wrong", !ok);
+          c.b.classList.toggle("wrong", !ok);
+        });
+
+        levelState[levelIndex].checked = true;
+        score = Math.round((correctCount / items.length) * MAX_SCORE);
+        scoreVal.textContent = score;
+        progressVal.textContent = `Benar: ${correctCount} / ${items.length}`;
+
+        if (correctCount === items.length) {
+          levelState[levelIndex].complete = true;
+          levelCompleted[levelIndex] = true;
+          solved = new Set(items.map((it) => it.id));
+          checkFeedback.textContent = "Benar! Semua pasangan sudah tepat.";
+          checkFeedback.style.color = "#218b4b";
+          checkBtn.style.display = "none";
+          document.getElementById("resetLevelBtn").style.display =
+            "inline-block";
+          updateMap();
+          setTimeout(showComplete, 500);
+        } else {
+          checkFeedback.textContent =
+            "Masih ada pasangan yang belum tepat. Coba perbaiki lagi!";
+          checkFeedback.style.color = "#d84d4d";
+        }
+      }
+
+      function resetCurrentLevel() {
+        levelState[levelIndex] = { pairs: [], checked: false, complete: false };
+        levelCompleted[levelIndex] = false;
+        score = 0;
+        scoreVal.textContent = 0;
+        connections = [];
+        solved = new Set();
+        checkBtn.style.display = "inline-block";
+        checkFeedback.textContent = "";
+        updateMap();
+        loadLevel(levelIndex);
+      }
+
+      function showComplete() {
+        const finishedLevel = levels[levelIndex];
+        const allDone = levelCompleted.every(Boolean);
+
+        if (allDone) {
+          modalIcon.textContent = "🏆";
+          modalTitle.textContent = "Semua Level Selesai!";
+          modalMsg.textContent = `Skor ${finishedLevel.name}: ${MAX_SCORE}/${MAX_SCORE}`;
+          modalBtnPrimary.style.display = "none";
+          modalBtnSecondary.textContent = "Tutup";
+          modalBtnSecondary.onclick = () => overlay.classList.remove("show");
+          overlay.classList.add("show");
+          launchConfetti(30);
+          return;
+        }
+
+        const hasNext = levelIndex < levels.length - 1;
+        modalIcon.textContent = "🎉";
+        modalTitle.textContent = `${finishedLevel.name} selesai!`;
+        modalMsg.textContent = `Semua jawaban benar.`;
+
+        if (hasNext) {
+          const nextLevel = levels[levelIndex + 1];
+          modalBtnPrimary.style.display = "inline-block";
+          modalBtnPrimary.textContent = `Lanjut ke ${nextLevel.name} ▶`;
+          modalBtnPrimary.onclick = () => loadLevel(levelIndex + 1);
+        } else {
+          modalBtnPrimary.style.display = "none";
+        }
+
+        modalBtnSecondary.textContent = "Tutup";
+        modalBtnSecondary.onclick = () => overlay.classList.remove("show");
+
+        overlay.classList.add("show");
+        launchConfetti(16);
+      }
+
+      function launchConfetti(count) {
+        const emojis = ["🎉", "🌟", "🔺", "⭐", "🔵"];
+        const n = count || 24;
+        for (let i = 0; i < n; i++) {
+          setTimeout(() => {
+            const c = document.createElement("div");
+            c.className = "confetti";
+            c.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+            c.style.left = Math.random() * 100 + "vw";
+            c.style.animationDuration = 2 + Math.random() * 1.5 + "s";
+            document.body.appendChild(c);
+            setTimeout(() => c.remove(), 3600);
+          }, i * 60);
+        }
+      }
+
+      window.addEventListener("resize", () =>
+        requestAnimationFrame(drawConnections),
+      );
+      document
+        .getElementById("resetLevelBtn")
+        .addEventListener("click", resetCurrentLevel);
+      document
+        .getElementById("checkBtn")
+        .addEventListener("click", checkAnswers);
+
+      renderMap();
+      loadLevel(0);
+    </script>
+  </body>
+</html>
